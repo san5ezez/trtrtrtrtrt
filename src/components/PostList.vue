@@ -1,11 +1,11 @@
 <template>
-  <post-form v-model="newPost" @post-created="addPost" />
-  <div class="post" v-for="post in posts" :key="post">
-    <div><strong>Название:</strong> {{ post.title }}</div>
-    <div><strong>Описание:</strong> {{ post.body }}</div>
-  </div>
-  <div class="post___btns">
-    <button>Удалить</button>
+  <div>
+    <post-form v-model="newPost" @post-created="addPost" />
+    <div class="post" v-for="post in posts" :key="post.id">
+      <div><strong>Название:</strong> {{ post.title }}</div>
+      <div><strong>Описание:</strong> {{ post.body }}</div>
+      <button @click="deletePost(post.id)">Удалить</button>
+    </div>
   </div>
 </template>
 
@@ -13,6 +13,17 @@
 export default {
   props: {
     posts: Array, // Принимаем массив постов через props
+  },
+  methods: {
+    deletePost(postId) {
+      /* eslint-disable vue/no-mutating-props */
+      const index = this.posts.findIndex((post) => post.id === postId);
+      if (index !== -1) {
+        this.posts.splice(index, 1);
+        this.$emit("post-deleted", postId);
+      }
+      /* eslint-enable vue/no-mutating-props */
+    },
   },
 };
 </script>
